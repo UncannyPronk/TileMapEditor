@@ -20,6 +20,8 @@ def newproj():
     running = True
     blocks = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]
     rects = []
+    spritesheetimport = False
+    tile_selection = 0
     while running:
         pygame.display.flip(); clock.tick(30)
         for event in pygame.event.get():
@@ -42,16 +44,53 @@ def newproj():
         #display
         screen.fill((60, 60, 60))
         pygame.draw.rect(screen, (0, 0, 0), (0, 0, 300, monitor_size[1]))
+        if spritesheetimport:
+            screen.blit(pygame.transform.scale(ssimage, (192, 192)), (50, 180))
+            for i in range(len(tilerects)):
+                if tilerects[i].collidepoint(mouse[0]):
+                    pygame.draw.rect(screen, (255, 255, 0), tilerects[i], 2)
+                    if mouse[1][0]:
+                        tile_selection = i
         for i in range(len(blocks)):
             rects.append([])
             for j in range(len(blocks[i])):
                 rects[i].append(Rect(j*32 + 300, i*32, 32, 32))
                 if blocks[i][j] != 0:
-                    pass
+                    if blocks[i][j] == 1:
+                        screen.blit(ssimage, (j*32 + 300, i*32), (0, 0, 32, 32))
+                    elif blocks[i][j] == 2:
+                        screen.blit(ssimage, (j*32 + 300, i*32), (32, 0, 32, 32))
+                    elif blocks[i][j] == 3:
+                        screen.blit(ssimage, (j*32 + 300, i*32), (64, 0, 32, 32))
+                    elif blocks[i][j] == 4:
+                        screen.blit(ssimage, (j*32 + 300, i*32), (0, 32, 32, 32))
+                    elif blocks[i][j] == 5:
+                        screen.blit(ssimage, (j*32 + 300, i*32), (32, 32, 32, 32))
+                    elif blocks[i][j] == 6:
+                        screen.blit(ssimage, (j*32 + 300, i*32), (64, 32, 32, 32))
+                    elif blocks[i][j] == 7:
+                        screen.blit(ssimage, (j*32 + 300, i*32), (0, 64, 32, 32))
+                    elif blocks[i][j] == 8:
+                        screen.blit(ssimage, (j*32 + 300, i*32), (32, 64, 32, 32))
+                    elif blocks[i][j] == 9:
+                        screen.blit(ssimage, (j*32 + 300, i*32), (64, 64, 32, 32))
                 if rects[i][j].collidepoint((mouse[0])):
                     pygame.draw.rect(screen, (255, 255, 0), rects[i][j], 3)
+                    if mouse[1][0]:
+                        blocks[i][j] = tile_selection
                 else:
                     pygame.draw.rect(screen, (0, 0, 0), rects[i][j], 3)
+        if not spritesheetimport:
+            screen = pygame.display.set_mode(monitor_size, pygame.RESIZABLE)
+            ss = filedialog.askopenfile(initialdir = "./", title = "Import Sprite Sheet", filetypes = (("png file", "*.png"), ("all files", "*.*")))
+            ssimage = pygame.image.load(str(ss.name))
+            screen = pygame.display.set_mode(monitor_size, pygame.FULLSCREEN)
+            tilerects = []
+            for i in range(int(ssimage.get_width()/32)):
+                for j in range(int(ssimage.get_height()/32)):
+                    tilerects.append(Rect(i*64 + 50, j*64 + 180, 64, 64))
+            
+            spritesheetimport = True
 
 def main():
     running = True
@@ -80,8 +119,8 @@ def main():
         if not rect1.collidepoint((mouse[0])):
             if text1size > 60:
                 text1size -= 4
-            if text1x < monitor_size[0]/4 + 100:
-                text1x += 12
+            if text1x < monitor_size[0]/4 + 90:
+                text1x += 15
             if text1y < 340:
                 text1y += 4
             if text1g > 0:
@@ -89,8 +128,8 @@ def main():
         else:
             if text1size < 80:
                 text1size += 4
-            if text1x > monitor_size[0]/4 + 40:
-                text1x -= 12
+            if text1x > monitor_size[0]/4 + 30:
+                text1x -= 15
             if text1y > 320:
                 text1y -= 4
             if text1g < 200:
