@@ -1,7 +1,7 @@
 import pygame
 from pygame import *
 from pygame.locals import *
-import sys, datetime
+import sys, datetime, json
 from tkinter import messagebox, filedialog
 
 pygame.init()
@@ -18,7 +18,8 @@ def writetext(text, pos, size=30, color=(255, 255, 255), font="Candara"):
 
 def newproj():
     running = True
-    blocks = [[0]]
+    blocks = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]
+    rects = []
     while running:
         pygame.display.flip(); clock.tick(30)
         for event in pygame.event.get():
@@ -28,18 +29,29 @@ def newproj():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     running = False
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if event.button == 1:
-                    print(pygame.mouse.get_pos())
         mouse = pygame.mouse.get_pos(), pygame.mouse.get_pressed()
+        keys_pressed = pygame.key.get_pressed()
+        if keys_pressed[K_LCTRL]:
+            if keys_pressed[K_s]:
+                global screen
+                screen = pygame.display.set_mode(monitor_size, pygame.RESIZABLE)
+                path = filedialog.asksaveasfilename(initialdir = "./", title = "Save Tilemap", filetypes = (("json file", "*.json"), ("all files", "*.*")))
+                with open(f"{path}.json", "w") as outfile:
+                    json.dump(blocks, outfile)
+                screen = pygame.display.set_mode(monitor_size, pygame.FULLSCREEN)
         #display
         screen.fill((60, 60, 60))
         pygame.draw.rect(screen, (0, 0, 0), (0, 0, 300, monitor_size[1]))
         for i in range(len(blocks)):
+            rects.append([])
             for j in range(len(blocks[i])):
+                rects[i].append(Rect(j*32 + 300, i*32, 32, 32))
                 if blocks[i][j] != 0:
                     pass
-                pygame.draw.rect(screen, (255, 255, 0), (j*32 + 300, i*32, 32, 32), 3)
+                if rects[i][j].collidepoint((mouse[0])):
+                    pygame.draw.rect(screen, (255, 255, 0), rects[i][j], 3)
+                else:
+                    pygame.draw.rect(screen, (0, 0, 0), rects[i][j], 3)
 
 def main():
     running = True
