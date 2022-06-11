@@ -48,49 +48,53 @@ def newproj():
             screen.blit(pygame.transform.scale(ssimage, (192, 192)), (50, 180))
             for i in range(len(tilerects)):
                 if tilerects[i].collidepoint(mouse[0]):
-                    pygame.draw.rect(screen, (255, 255, 0), tilerects[i], 2)
+                    pygame.draw.rect(screen, (255, 255, 0), tilerects[i], 1)
                     if mouse[1][0]:
-                        tile_selection = i
+                        tile_selection = i + 1
         for i in range(len(blocks)):
             rects.append([])
             for j in range(len(blocks[i])):
-                rects[i].append(Rect(j*32 + 300, i*32, 32, 32))
+                rects[i].append(Rect(j*64 + 300, i*64, 64, 64))
                 if blocks[i][j] != 0:
                     if blocks[i][j] == 1:
-                        screen.blit(ssimage, (j*32 + 300, i*32), (0, 0, 32, 32))
+                        screen.blit(pygame.transform.scale(ssimage, (192, 192)), (j*64 + 300, i*64), (0, 0, 64, 64))
                     elif blocks[i][j] == 2:
-                        screen.blit(ssimage, (j*32 + 300, i*32), (32, 0, 32, 32))
+                        screen.blit(pygame.transform.scale(ssimage, (192, 192)), (j*64 + 300, i*64), (64, 0, 64, 64))
                     elif blocks[i][j] == 3:
-                        screen.blit(ssimage, (j*32 + 300, i*32), (64, 0, 32, 32))
+                        screen.blit(pygame.transform.scale(ssimage, (192, 192)), (j*64 + 300, i*64), (128, 0, 64, 64))
                     elif blocks[i][j] == 4:
-                        screen.blit(ssimage, (j*32 + 300, i*32), (0, 32, 32, 32))
+                        screen.blit(pygame.transform.scale(ssimage, (192, 192)), (j*64 + 300, i*64), (0, 64, 64, 64))
                     elif blocks[i][j] == 5:
-                        screen.blit(ssimage, (j*32 + 300, i*32), (32, 32, 32, 32))
+                        screen.blit(pygame.transform.scale(ssimage, (192, 192)), (j*64 + 300, i*64), (64, 64, 64, 64))
                     elif blocks[i][j] == 6:
-                        screen.blit(ssimage, (j*32 + 300, i*32), (64, 32, 32, 32))
+                        screen.blit(pygame.transform.scale(ssimage, (192, 192)), (j*64 + 300, i*64), (128, 64, 64, 64))
                     elif blocks[i][j] == 7:
-                        screen.blit(ssimage, (j*32 + 300, i*32), (0, 64, 32, 32))
+                        screen.blit(pygame.transform.scale(ssimage, (192, 192)), (j*64 + 300, i*64), (0, 128, 64, 64))
                     elif blocks[i][j] == 8:
-                        screen.blit(ssimage, (j*32 + 300, i*32), (32, 64, 32, 32))
+                        screen.blit(pygame.transform.scale(ssimage, (192, 192)), (j*64 + 300, i*64), (64, 128, 64, 64))
                     elif blocks[i][j] == 9:
-                        screen.blit(ssimage, (j*32 + 300, i*32), (64, 64, 32, 32))
+                        screen.blit(pygame.transform.scale(ssimage, (192, 192)), (j*64 + 300, i*64), (128, 128, 64, 64))
                 if rects[i][j].collidepoint((mouse[0])):
-                    pygame.draw.rect(screen, (255, 255, 0), rects[i][j], 3)
+                    pygame.draw.rect(screen, (255, 255, 0), rects[i][j], 1)
                     if mouse[1][0]:
                         blocks[i][j] = tile_selection
                 else:
-                    pygame.draw.rect(screen, (0, 0, 0), rects[i][j], 3)
+                    pygame.draw.rect(screen, (0, 0, 0), rects[i][j], 1)
         if not spritesheetimport:
             screen = pygame.display.set_mode(monitor_size, pygame.RESIZABLE)
             ss = filedialog.askopenfile(initialdir = "./", title = "Import Sprite Sheet", filetypes = (("png file", "*.png"), ("all files", "*.*")))
             ssimage = pygame.image.load(str(ss.name))
             screen = pygame.display.set_mode(monitor_size, pygame.FULLSCREEN)
             tilerects = []
-            for i in range(int(ssimage.get_width()/32)):
-                for j in range(int(ssimage.get_height()/32)):
+            for j in range(int(ssimage.get_height()/32)):
+                for i in range(int(ssimage.get_width()/32)):
                     tilerects.append(Rect(i*64 + 50, j*64 + 180, 64, 64))
             
             spritesheetimport = True
+        else:
+            writetext("Tile Selection: " + str(tile_selection), (50, 50))
+            if tile_selection != 0:
+                screen.blit(ssimage, (mouse[0][0] - 16, mouse[0][1] - 16), tilerects[tile_selection - 1])
 
 def main():
     running = True
