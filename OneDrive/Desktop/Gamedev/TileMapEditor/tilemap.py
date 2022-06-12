@@ -21,6 +21,8 @@ def newproj():
     blocks = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]
     spritesheetimport = False
     scroll = [0, 0]
+    addrowbool = False
+    addcolumnbool = False
     tile_selection = 0
     while running:
         pygame.display.flip(); clock.tick(30)
@@ -31,6 +33,18 @@ def newproj():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     running = False
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1:
+                    if addcolumnbool:
+                        for i in range(len(blocks)):
+                            blocks[i].append(0)
+                        addcolumnbool = False
+                    elif addrowbool:
+                        prevlen = len(blocks[0])
+                        blocks.append([])
+                        for i in range(prevlen):
+                            blocks[-1].append(0)
+                        addrowbool = False
         mouse = pygame.mouse.get_pos(), pygame.mouse.get_pressed()
         mousepos = [mouse[0][0] + scroll[0], mouse[0][1] + scroll[1]]
         keys_pressed = pygame.key.get_pressed()
@@ -64,19 +78,15 @@ def newproj():
 
         if columnrect.collidepoint((mouse[0])):
             pygame.draw.rect(screen, (255, 0, 0), columnrect)
-            if mouse[1][0]:
-                for i in range(len(blocks)):
-                    blocks[i].append(0)
+            addcolumnbool = True
+            addrowbool = False
         else:
             pygame.draw.rect(screen, (255, 255, 0), columnrect)
 
         if rowrect.collidepoint((mouse[0])):
             pygame.draw.rect(screen, (255, 0, 0), rowrect)
-            if mouse[1][0]:
-                prevlen = len(blocks[0])
-                blocks.append([])
-                for i in range(prevlen):
-                    blocks[-1].append(0)
+            addrowbool = True
+            addcolumnbool = False
         else:
             pygame.draw.rect(screen, (255, 255, 0), rowrect)
         
