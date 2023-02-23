@@ -66,6 +66,7 @@ def newproj():
                 screen = pygame.display.set_mode(monitor_size, pygame.FULLSCREEN)
             if keys_pressed[K_n]:
                 blocks = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]
+        toolbar_rect = Rect(scroll[0], scroll[1], 300, monitor_size[1])
                 
         #display
         screen.fill((60, 60, 60))
@@ -93,7 +94,7 @@ def newproj():
                         screen.blit(pygame.transform.scale(ssimage, (192, 192)), (j*64 + 300 - scroll[0]*2, i*64 - scroll[1]*2), (64, 128, 64, 64))
                     elif blocks[i][j] == 9:
                         screen.blit(pygame.transform.scale(ssimage, (192, 192)), (j*64 + 300 - scroll[0]*2, i*64 - scroll[1]*2), (128, 128, 64, 64))
-                if rects[i][j].collidepoint((mousepos)):
+                if rects[i][j].collidepoint((mousepos)) and not toolbar_rect.collidepoint((mousepos)):
                     pygame.draw.rect(screen, (255, 255, 0), (rects[i][j].x - scroll[0], rects[i][j].y - scroll[1], rects[i][j].w, rects[i][j].h), 1)
                     if mouse[1][0]:
                         blocks[i][j] = tile_selection
@@ -198,6 +199,7 @@ def openproj():
                 screen = pygame.display.set_mode(monitor_size, pygame.FULLSCREEN)
             if keys_pressed[K_n]:
                 blocks = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]
+        toolbar_rect = Rect(scroll[0], scroll[1], 300, monitor_size[1])
 
         #display
         screen.fill((60, 60, 60))
@@ -225,7 +227,7 @@ def openproj():
                         screen.blit(pygame.transform.scale(ssimage, (192, 192)), (j*64 + 300 - scroll[0]*2, i*64 - scroll[1]*2), (64, 128, 64, 64))
                     elif blocks[i][j] == 9:
                         screen.blit(pygame.transform.scale(ssimage, (192, 192)), (j*64 + 300 - scroll[0]*2, i*64 - scroll[1]*2), (128, 128, 64, 64))
-                if rects[i][j].collidepoint((mousepos)):
+                if rects[i][j].collidepoint((mousepos)) and not toolbar_rect.collidepoint((mousepos)):
                     pygame.draw.rect(screen, (255, 255, 0), (rects[i][j].x - scroll[0], rects[i][j].y - scroll[1], rects[i][j].w, rects[i][j].h), 1)
                     if mouse[1][0]:
                         blocks[i][j] = tile_selection
